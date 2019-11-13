@@ -26,6 +26,7 @@ var (
 )
 
 func main() {
+	//parse connection string if it exists
 	if len(os.Args) > 1 {
 		user = regexp.MustCompile(`(\w+):`).FindStringSubmatch(os.Args[1])[1]
 		password = regexp.MustCompile(`:(.*)@`).FindStringSubmatch(os.Args[1])[1]
@@ -33,6 +34,7 @@ func main() {
 		port = regexp.MustCompile(`:(\d+)(/)`).FindStringSubmatch(os.Args[1])[1]
 		dbname = regexp.MustCompile(`/(\w+)`).FindStringSubmatch(os.Args[1])[1]
 	}
+
 	if len(os.Args) == 3 {
 		dbtype = os.Args[2]
 	}
@@ -44,8 +46,9 @@ func main() {
 		connStr = "sqlserver" + "://" + user + ":" + password + "@" + host + ":" + port + "?" + "database=" + dbname
 		stmt = "select @@version"
 	case "oracle":
-		connStr = ""
+		connStr = "oracle" + "://" + user + ":" + password + "@" + host + ":" + port + ":" + dbname
 		stmt = "select * from v$version"
+		dbtype = "goracle"
 	}
 	log.Print(connStr)
 	db, err := sql.Open(dbtype, connStr)
