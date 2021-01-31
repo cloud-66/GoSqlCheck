@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	_ "github.com/denisenkom/go-mssqldb"
 	_ "github.com/lib/pq"
+	_ "github.com/sijms/go-ora"
 	"log"
 	"os"
 	"regexp"
@@ -46,10 +47,10 @@ func main() {
 		connStr = "sqlserver" + "://" + user + ":" + password + "@" + host + ":" + port + "?" + "database=" + dbname
 		stmt = "select @@version"
 	case "oracle":
-		connStr = "oracle" + "://" + user + ":" + password + "@" + host + ":" + port + ":" + dbname
+		connStr = "oracle" + "://" + user + ":" + password + "@" + host + ":" + port + "/" + dbname
 		stmt = "select * from v$version"
-		dbtype = "goracle"
 	}
+
 	log.Print(connStr)
 	db, err := sql.Open(dbtype, connStr)
 	if err != nil {
